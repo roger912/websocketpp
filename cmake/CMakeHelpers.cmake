@@ -52,7 +52,7 @@ macro (build_executable TARGET_NAME)
 
     add_executable (${TARGET_NAME} ${ARGN})
 
-    include_directories (${WEBSOCKETPP_ROOT} ${WEBSOCKETPP_INCLUDE})
+    include_directories (${WEBSOCKETPP_ROOT} ${WEBSOCKETPP_INCLUDE} ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
 
     target_link_libraries(${TARGET_NAME} ${WEBSOCKETPP_PLATFORM_LIBS})
 
@@ -88,7 +88,11 @@ macro (final_target)
 endmacro ()
 
 macro (link_boost)
-    target_link_libraries (${TARGET_NAME} ${Boost_LIBRARIES})
+    if (MSVC)
+        target_link_libraries (${TARGET_NAME} ws2_32.lib)    
+    else ()
+        target_link_libraries (${TARGET_NAME} ${Boost_LIBRARIES})
+    endif ()        
 endmacro ()
 
 macro (link_openssl)
