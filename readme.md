@@ -48,10 +48,24 @@ Author
 ======
 Peter Thorson - websocketpp@zaphoyd.com
 
-websocketpp可以很好的支持MSVC2008,使用boost代替c++11的情况下。有些例子需要稍微修改即可。主要是map,set容器用到std::owner_less的c++11的特性。
-可以修正为：
+
+=============
+websocketpp可以很好的支持MSVC2008,使用boost代替c++11的情况下。有些例子需要稍微修改即可,主要是map,set容器用到std::owner_less的c++11的特性。
+可以fix：
 #if defined(_WEBSOCKETPP_CPP11_INTERNAL_)
     typedef std::set<connection_hdl,std::owner_less<connection_hdl> > con_list;
 #else
     typedef std::set<connection_hdl> con_list;
 #endif
+
+有些例子需要用到openssl,及ws2_32.lib,所以，修正了cmake/CMakeHelpers.cmake,
+fix:
+include_directories (${WEBSOCKETPP_ROOT} ${WEBSOCKETPP_INCLUDE} ${OPENSSL_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
+
+macro (link_boost)
+    if (MSVC)
+        target_link_libraries (${TARGET_NAME} ws2_32.lib)    
+    else ()
+        target_link_libraries (${TARGET_NAME} ${Boost_LIBRARIES})
+    endif ()        
+endmacro ()
