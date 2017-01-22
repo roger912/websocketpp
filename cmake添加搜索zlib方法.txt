@@ -1,0 +1,6 @@
+
+cmakeÌí¼Ózlib¿âËÑË÷£º
+
+ZLIB_ROOT
+PATH
+E:/Libs/zlib/install
